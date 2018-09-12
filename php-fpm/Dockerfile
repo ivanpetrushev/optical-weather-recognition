@@ -8,7 +8,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         git \
         zip \
         unzip \
-        php-pclzip \
+        zlib1g-dev \
+#        php-pclzip \
 #        libfreetype6-dev \
 #        libjpeg62-turbo-dev \
 #        libpng12-dev \
@@ -21,6 +22,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && docker-php-ext-install pdo_mysql \
     && docker-php-ext-install mysqli \
     && docker-php-ext-install intl \
+    && docker-php-ext-install zip \
     && rm -rf /var/lib/apt/lists/*
 
 RUN cd /usr/local/bin/; curl --silent --show-error https://getcomposer.org/installer | php
