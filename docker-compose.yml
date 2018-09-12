@@ -23,7 +23,7 @@ services:
     apache:
         image: smtripat/apache-php-fpm:latest
         ports:
-          - 8003:80
+          - 8004:80
         volumes:
           - ./laravel:/var/www/html/docroot
           - ./apache2/logs/:/var/log/apache2
@@ -41,7 +41,7 @@ services:
     myadmin:
         image: phpmyadmin/phpmyadmin
         ports:
-            - 8181:80
+            - 8182:80
         environment:
             MYSQL_ROOT_PASSWORD: root
             MYSQL_DATABASE: laravel
