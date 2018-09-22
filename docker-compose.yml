@@ -18,6 +18,7 @@ services:
         tty: true
         volumes:
             - ./laravel:/var/www/laravel
+            - /home/ivanatora/weather_data:/weather_data
         links:
             - db
     apache:

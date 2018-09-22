@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use App\Services\CrawlerService;
 
 class ImportImages extends Command
 {
@@ -37,6 +38,9 @@ class ImportImages extends Command
      */
     public function handle()
     {
+        $crawler = new CrawlerService();
+        $crawler->setRootDir('/weather_data');
+        $crawler->createLocations();
         echo "bau!\n";
     }
 }
