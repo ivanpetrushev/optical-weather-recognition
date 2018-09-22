@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Console\Commands\ImportHistograms;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Console\Commands\ImportImages;
@@ -14,7 +15,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        ImportImages::class
+        ImportImages::class,
+        ImportHistograms::class,
     ];
 
     /**

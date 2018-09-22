@@ -12,6 +12,16 @@ class Camera extends Model
 
     public function location()
     {
-        return $this->hasMany('App\Location', 'location_id');
+        return $this->belongsTo('App\Location', 'location_id');
+    }
+
+    public function images()
+    {
+        return $this->hasMany('App\Image', 'camera_id');
+    }
+
+    public function cameras()
+    {
+        return $this->hasMany('App\Camera', 'camera_id');
     }
 }

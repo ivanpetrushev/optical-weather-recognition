@@ -11,11 +11,11 @@ class Image extends Model
 
     public function location()
     {
-        return $this->hasMany('App\Location', 'location_id');
+        return $this->belongsTo('App\Location', 'location_id');
     }
 
     public function camera()
     {
-        return $this->hasMany('App\Camera', 'camera_id');
+        return $this->belongsTo('App\Camera', 'camera_id');
     }
 }
