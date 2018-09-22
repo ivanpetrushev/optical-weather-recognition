@@ -21,6 +21,10 @@ class CreateImages extends Migration
         Schema::create('cameras', function (Blueprint $table) {
             $table->increments('id');
             $table->text('name');
+            $table->unsignedInteger('location_id');
+
+            $table->index('location_id');
+            $table->foreign('location_id')->references('id')->on('locations')->onDelete('cascade');
         });
 
         Schema::create('images', function (Blueprint $table) {
