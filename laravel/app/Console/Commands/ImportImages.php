@@ -38,10 +38,12 @@ class ImportImages extends Command
      */
     public function handle()
     {
+        print "Starting image import...\n";
         $crawler = new CrawlerService();
         $crawler->setRootDir('/weather_data');
         $crawler->createLocations();
         $crawler->createCameras();
+        $crawler->createImages();
         echo "import ended\n";
     }
 }

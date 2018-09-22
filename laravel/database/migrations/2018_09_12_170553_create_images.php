@@ -36,9 +36,9 @@ class CreateImages extends Migration
             $table->string('filename', 255)->default('');
             $table->date('taken_date');
             $table->time('taken_time');
-            $table->json('histogram_lightness');
-            $table->json('histogram_hue');
-            $table->json('histogram_saturation');
+            $table->json('histogram_lightness')->nullable();
+            $table->json('histogram_hue')->nullable();
+            $table->json('histogram_saturation')->nullable();
 
             $table->index('location_id');
             $table->foreign('location_id')->references('id')->on('locations')->onDelete('cascade');

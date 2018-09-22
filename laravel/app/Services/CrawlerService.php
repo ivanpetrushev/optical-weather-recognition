@@ -19,7 +19,7 @@ class CrawlerService
 
     public function createLocations()
     {
-        print "Creating locations...\n";
+        print "Creating LOCATIONS...\n";
         if (empty($this->rootDir)) {
             throw new Exception('No rootDir defined');
         }
@@ -44,7 +44,7 @@ class CrawlerService
 
     public function createCameras()
     {
-        print "Creating cameras...\n";
+        print "Creating CAMEREAS...\n";
 
         $locations = Location::all();
         foreach ($locations as $location) {
@@ -63,6 +63,56 @@ class CrawlerService
                         $camera->location_id = $location->id;
                         $camera->save();
                         print "added!\n";
+                    }
+                }
+            }
+        }
+    }
+
+    public function createImages()
+    {
+        print "Creating images...\n";
+
+        $locations = Location::all();
+        foreach ($locations as $location) {
+            $cameras = Camera::where('location_id', $location->id)->get();
+            foreach ($cameras as $camera) {
+                $dir = $this->rootDir . '/' . $location->name . '/' . $camera->name;
+                foreach (new \DirectoryIterator($dir) as $fileDir) {
+                    if ($fileDir->isDir() && !$fileDir->isDot()) {
+                        $date = $fileDir->getBasename();
+                        print "LOC: {$location->name} CAM: {$camera->name} DATE: $date ";
+
+                        $dateDir = $dir . '/' . $date;
+                        foreach (new \DirectoryIterator($dateDir) as $imageDir) {
+                            if ($imageDir->isFile()) {
+                                $filename = $imageDir->getBasename();
+                                // $filename = '2018-09-18_21:20:01.jpg';
+                                $pathinfo = pathinfo($dateDir . '/' . $filename);
+                                $name_parts = explode('_', $pathinfo['filename']);
+                                $time = $name_parts[1];
+
+                                $image = Image::where([
+                                    'location_id' => $location->id,
+                                    'camera_id' => $camera->id,
+                                    'filename' => $filename
+                                ])->first();
+                                if ($image) {
+                                    print '.';
+                                } else {
+                                    $image = new Image();
+                                    $image->location_id = $location->id;
+                                    $image->camera_id = $camera->id;
+                                    $image->filename = $filename;
+                                    $image->dir = $dateDir;
+                                    $image->taken_date = $date;
+                                    $image->taken_time = $time;
+                                    $image->save();
+                                    print '+';
+                                }
+                            }
+                        }
+                        print "\n";
                     }
                 }
             }
