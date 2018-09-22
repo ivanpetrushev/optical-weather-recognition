@@ -13,9 +13,21 @@ class CreateImages extends Migration
      */
     public function up()
     {
+        Schema::create('locations', function (Blueprint $table) {
+            $table->increments('id');
+            $table->text('name');
+        });
+
+        Schema::create('cameras', function (Blueprint $table) {
+            $table->increments('id');
+            $table->text('name');
+        });
+
         Schema::create('images', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
+            $table->unsignedInteger('location_id');
+            $table->unsignedInteger('camera_id');
             $table->text('dir');
             $table->string('filename', 255)->default('');
             $table->date('taken_date');
@@ -23,6 +35,11 @@ class CreateImages extends Migration
             $table->json('histogram_lightness');
             $table->json('histogram_hue');
             $table->json('histogram_saturation');
+
+            $table->index('location_id');
+            $table->foreign('location_id')->references('id')->on('locations')->onDelete('cascade');
+            $table->index('camera_id');
+            $table->foreign('camera_id')->references('id')->on('cameras')->onDelete('cascade');
         });
     }
 
