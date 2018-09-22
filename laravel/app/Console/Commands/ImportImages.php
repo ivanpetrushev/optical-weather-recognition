@@ -41,6 +41,7 @@ class ImportImages extends Command
         $crawler = new CrawlerService();
         $crawler->setRootDir('/weather_data');
         $crawler->createLocations();
-        echo "bau!\n";
+        $crawler->createCameras();
+        echo "import ended\n";
     }
 }
