@@ -10,10 +10,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         unzip \
         zlib1g-dev \
 #        php-pclzip \
+        libfann-dev \
         libfreetype6-dev \
         libjpeg62-turbo-dev \
         libpng-dev \
         libwebp-dev \
+    && pecl install fann \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ \
         --with-jpeg-dir=/usr/include/ \
         --with-png-dir=/usr/include/ \
@@ -23,6 +25,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && docker-php-ext-install mysqli \
     && docker-php-ext-install intl \
     && docker-php-ext-install zip \
+    && docker-php-ext-enable fann \
     && rm -rf /var/lib/apt/lists/*
 
 RUN cd /usr/local/bin/; curl --silent --show-error https://getcomposer.org/installer | php
