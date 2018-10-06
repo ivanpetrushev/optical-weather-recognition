@@ -11,24 +11,40 @@ services:
             MYSQL_DATABASE: laravel
             MYSQL_USER: laravel
             MYSQL_PASSWORD: laravel
-    php:
-        build: ./php-fpm
-        expose:
-            - "9000"
-        tty: true
-        volumes:
-            - ./laravel:/var/www/laravel
-            - /home/ivanatora/weather_data:/weather_data
+
+    web:
+        build: ./apache2
+#        image: php:7.2.2-apache
         links:
             - db
-    apache:
-        image: smtripat/apache-php-fpm:latest
-        ports:
-          - 8004:80
         volumes:
-          - ./laravel:/var/www/html/docroot
-          - ./apache2/logs/:/var/log/apache2
-          - ./apache2/sites-enabled/:/etc/apache2/sites-enabled
+            - ./apache2/sites-enabled/:/etc/apache2/sites-enabled
+            - ./laravel:/var/www/html/
+            - /home/ivanatora/weather_data:/weather_data
+        ports:
+            - 8004:80
+        stdin_open: true
+        tty: true
+#    php:
+#        build: ./php-fpm
+#        expose:
+#            - "9000"
+#        tty: true
+#        volumes:
+#            - ./laravel:/var/www/laravel
+#            - /home/ivanatora/weather_data:/weather_data
+#        links:
+#            - db
+
+#    apache:
+#        image: smtripat/apache-php-fpm:latest
+#        ports:
+#          - 8004:80
+#        volumes:
+#          - ./laravel:/var/www/html/docroot
+#          - ./apache2/logs/:/var/log/apache2
+#          - ./apache2/sites-enabled/:/etc/apache2/sites-enabled
+
 #    nginx:
 #        build: ./nginx
 #        ports:
