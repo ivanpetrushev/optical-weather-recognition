@@ -67,6 +67,48 @@ Ext.define('App.main', {
         return '<img src="/image/display/' + rec.data.id + '" width=200/>';
     },
 
+    renderLightness: function(val, meta, rec) {
+        var id = Ext.id();
+        Ext.defer(function(id, rec) {
+            var histogram = Ext.decode(rec.data.histogram_lightness)
+            var store = Ext.create('Ext.data.Store', {
+                fields: ['text', 'value'],
+                data: []
+            })
+            var min = histogram[0];
+            var max = histogram[0];
+            for (var i in histogram) {
+                var val = histogram[i];
+                store.add({
+                    'text': i,
+                    'value': val
+                });
+
+                if (val < min) {
+                    min = val;
+                }
+                if (val > max) {
+                    max = val;
+                }
+            }
+            console.log('count elements', histogram.length, 'min', min, 'max', max)
+
+            var chart = Ext.create('Ext.chart.CartesianChart', {
+                renderTo: id,
+                width: 200,
+                height: 100,
+                store: store,
+                series: {
+                    type: 'bar',
+                    xField: 'text',
+                    yField: 'value'
+                }
+            });
+            // console.log(id, rec);
+        }, 50, undefined, [id, rec]);
+        return '<div id="' + id + '"></div>';
+    },
+
     getImageGrid: function() {
         var me = this;
         if (! me.imageGrid) {
@@ -75,7 +117,8 @@ Ext.define('App.main', {
                 store: me.getImageStore(),
                 columns: [
                     {text: 'Image', dataIndex: 'filename', width: 200},
-                    {dataIndex: 'dummy', flex: 1, renderer: me.renderImage, flex: 1}
+                    {dataIndex: 'dummy', renderer: me.renderImage, width: 220},
+                    {dataIndex: 'dummy', renderer: me.renderLightness, flex: 1}
                     // {text: 'Date', dataIndex: 'taken_date', flex: 1},
                     // {text: 'Time', dataIndex: 'taken_time', flex: 1},
                 ],

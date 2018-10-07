@@ -4,6 +4,7 @@ Ext.Loader.setConfig('paths', {
     'App': '/js/app',
 });
 
+Ext.require('Ext.chart.CartesianChart')
 Ext.require('App.main')
 
 
