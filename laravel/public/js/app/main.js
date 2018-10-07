@@ -45,6 +45,7 @@ Ext.define('App.main', {
         if (! me.imageStore) {
             me.imageStore = Ext.create('Ext.data.Store', {
                 fields: ['id', 'name'],
+                pageSize: 10,
                 proxy: {
                     type: 'ajax',
                     url: '/image/list',
@@ -115,6 +116,102 @@ Ext.define('App.main', {
         return '<div id="' + id + '"></div>';
     },
 
+    renderHue: function(val, meta, rec) {
+        // if there are no values, skip rendering chart
+        if (Ext.isEmpty(rec.data.histogram_hue)) {
+            return 'empty histogram_hue';
+        }
+
+        // it seems there ARE values, render a chart
+        var id = Ext.id();
+        Ext.defer(function(id, rec) {
+            var histogram = Ext.decode(rec.data.histogram_hue)
+            var store = Ext.create('Ext.data.Store', {
+                fields: ['text', 'value'],
+                data: []
+            })
+            var min = histogram[0];
+            var max = histogram[0];
+            for (var i in histogram) {
+                var val = histogram[i];
+                store.add({
+                    'text': i,
+                    'value': val
+                });
+
+                if (val < min) {
+                    min = val;
+                }
+                if (val > max) {
+                    max = val;
+                }
+            }
+            console.log('count elements', histogram.length, 'min', min, 'max', max)
+
+            var chart = Ext.create('Ext.chart.CartesianChart', {
+                renderTo: id,
+                width: 200,
+                height: 100,
+                store: store,
+                series: {
+                    type: 'bar',
+                    xField: 'text',
+                    yField: 'value'
+                }
+            });
+            // console.log(id, rec);
+        }, 50, undefined, [id, rec]);
+        return '<div id="' + id + '"></div>';
+    },
+
+    renderSaturation: function(val, meta, rec) {
+        // if there are no values, skip rendering chart
+        if (Ext.isEmpty(rec.data.histogram_saturation)) {
+            return 'empty histogram_saturation';
+        }
+
+        // it seems there ARE values, render a chart
+        var id = Ext.id();
+        Ext.defer(function(id, rec) {
+            var histogram = Ext.decode(rec.data.histogram_saturation)
+            var store = Ext.create('Ext.data.Store', {
+                fields: ['text', 'value'],
+                data: []
+            })
+            var min = histogram[0];
+            var max = histogram[0];
+            for (var i in histogram) {
+                var val = histogram[i];
+                store.add({
+                    'text': i,
+                    'value': val
+                });
+
+                if (val < min) {
+                    min = val;
+                }
+                if (val > max) {
+                    max = val;
+                }
+            }
+            console.log('count elements', histogram.length, 'min', min, 'max', max)
+
+            var chart = Ext.create('Ext.chart.CartesianChart', {
+                renderTo: id,
+                width: 200,
+                height: 100,
+                store: store,
+                series: {
+                    type: 'bar',
+                    xField: 'text',
+                    yField: 'value'
+                }
+            });
+            // console.log(id, rec);
+        }, 50, undefined, [id, rec]);
+        return '<div id="' + id + '"></div>';
+    },
+
     getImageGrid: function() {
         var me = this;
         if (! me.imageGrid) {
@@ -124,7 +221,9 @@ Ext.define('App.main', {
                 columns: [
                     {text: 'Image', dataIndex: 'filename', width: 200},
                     {dataIndex: 'dummy', renderer: me.renderImage, width: 220},
-                    {dataIndex: 'dummy', renderer: me.renderLightness, flex: 1}
+                    {text: 'Lightness', dataIndex: 'dummy', renderer: me.renderLightness, width: 220},
+                    {text: 'Hue', dataIndex: 'dummy', renderer: me.renderHue, width: 220},
+                    {text: 'Saturation', dataIndex: 'dummy', renderer: me.renderSaturation, width: 220},
                     // {text: 'Date', dataIndex: 'taken_date', flex: 1},
                     // {text: 'Time', dataIndex: 'taken_time', flex: 1},
                 ],
