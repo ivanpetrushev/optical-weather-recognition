@@ -49,6 +49,10 @@ class CrawlerService
         $locations = Location::all();
         foreach ($locations as $location) {
             $dir = $this->rootDir . '/' . $location->name;
+            if (! is_dir($dir)) {
+                print "Directory $dir is missing!\n";
+                continue;
+            }
             foreach (new \DirectoryIterator($dir) as $fileDir) {
                 if ($fileDir->isDir() && !$fileDir->isDot()) {
                     $basename = $fileDir->getBasename();
@@ -78,6 +82,10 @@ class CrawlerService
             $cameras = Camera::where('location_id', $location->id)->get();
             foreach ($cameras as $camera) {
                 $dir = $this->rootDir . '/' . $location->name . '/' . $camera->name;
+                if (! is_dir($dir)) {
+                    print "Directory $dir is missing!\n";
+                    continue;
+                }
                 foreach (new \DirectoryIterator($dir) as $fileDir) {
                     if ($fileDir->isDir() && !$fileDir->isDot()) {
                         $date = $fileDir->getBasename();
