@@ -14,3 +14,6 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/camera/list', 'CameraController@index');
+Route::get('/location/list', 'LocationController@index');
