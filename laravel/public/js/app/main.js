@@ -64,10 +64,16 @@ Ext.define('App.main', {
     },
 
     renderImage: function(val, meta, rec) {
-        return '<img src="/image/display/' + rec.data.id + '" width=200/>';
+        return '<a target="_blank" href="/image/display/' + rec.data.id + '"><img src="/image/display/' + rec.data.id + '" width=200/></a>';
     },
 
     renderLightness: function(val, meta, rec) {
+        // if there are no values, skip rendering chart
+        if (Ext.isEmpty(rec.data.histogram_lightness)) {
+            return 'empty histogram_lightness';
+        }
+
+        // it seems there ARE values, render a chart
         var id = Ext.id();
         Ext.defer(function(id, rec) {
             var histogram = Ext.decode(rec.data.histogram_lightness)

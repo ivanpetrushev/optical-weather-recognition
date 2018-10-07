@@ -37,7 +37,7 @@ class HistogramService
         for ($i = 0; $i < 100; $i++) {
             $histogramSaturation[$i] = 0;
         }
-        for ($i = 0; $i < 100; $i++) {
+        for ($i = 0; $i < 255; $i++) {
             $histogramLightness[$i] = 0;
         }
 
@@ -143,7 +143,7 @@ class HistogramService
                     break;
             }
         }
-        return array(round($h), round($s * 100), round($l * 100));
+        return array(round($h), round($s * 100), round($l * 255));
     }
 
     protected function hslToRgb($h, $s, $l)
