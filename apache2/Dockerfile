@@ -26,7 +26,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && docker-php-ext-install intl \
     && docker-php-ext-install zip \
     && docker-php-ext-enable fann \
+    && a2enmod rewrite \
+    && service apache2 restart \
     && rm -rf /var/lib/apt/lists/*
+
 
 #RUN cd /usr/local/bin/; curl --silent --show-error https://getcomposer.org/installer | php
 
