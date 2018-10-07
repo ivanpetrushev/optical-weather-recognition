@@ -4,20 +4,13 @@ namespace App\Services;
 
 use App\Camera;
 use App\Image;
+use Mockery\Exception;
 
 class HistogramService
 {
     public function createSomeHistograms()
     {
-        $images = Image::whereHas('camera', function ($q) {
-            $q->where('name', '6ti_septemvri');
-        })
-            ->where([
-                'taken_date' => '2018-09-20',
-//                'taken_time' => '11:20:01'
-            ])
-            ->orderBy('taken_date', 'asc')
-            ->orderBy('taken_time', 'asc')
+        $images = Image::where('histogram_lightness', null)
             ->with('camera')
             ->with('location')
             ->get();
@@ -53,7 +46,12 @@ class HistogramService
         $maskFullpath = '/weather_data/' . $image['location']['name'] . '/' . $image['camera']['name'] . '/mask.jpg';
 
         $imMask = imagecreatefromjpeg($maskFullpath);
-        $imImage = imagecreatefromjpeg($fullpath);
+        try {
+            $imImage = imagecreatefromjpeg($fullpath);
+        } catch (\Exception $e) {
+            print "\n\n Error processing image: $fullpath: " . $e->getMessage() . "\n\n";
+            return;
+        }
         list ($width, $height) = getimagesize($maskFullpath);
 
         // debug
@@ -108,7 +106,7 @@ class HistogramService
         $im->histogram_saturation = json_encode($histogramSaturation);
         $im->save();
 //        imagejpeg($imOut, '/var/www/laravel/out/' . $image['filename']);
-        print $image['filename'] . " ($cntPixelsCalculated pixels) done\n";
+        print $image['dir'] . '/' . $image['filename'] . " ($cntPixelsCalculated pixels) done\n";
     }
 
     public function getMask($image)

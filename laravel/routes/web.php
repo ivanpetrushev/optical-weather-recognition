@@ -16,4 +16,7 @@ Route::get('/', function () {
 });
 
 Route::get('/camera/list', 'CameraController@index');
+Route::get('/image/list', 'ImageController@index');
 Route::get('/location/list', 'LocationController@index');
+
+Route::get('/image/display/{id}', 'ImageController@display');
